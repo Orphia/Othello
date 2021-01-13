@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1609617941 source:c:\users\jihane\desktop\projet c\othello\main.c
+	<stdio.h>
+	<string.h>
+
