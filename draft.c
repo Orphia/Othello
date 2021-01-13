@@ -1,38 +1,23 @@
-void diag_color_change(matrice M, int k, int l, char car1,char car2) {
-    int i, s=0,t=0,r,j,p,q;
-    int T[8]={{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
-    i=k+1;
-    j=l+1;
-    while(i<8 && j<8){ //ghadi ichanger le noir
-        if (M[i][j]==car1) {
-                s++;
-                T[s-1]=(i,j);}
-            else if (M[i][j]==car2){
-                if (s==0) break;
-                else {
-                    for(r=0;r<s;r++) {
-                       p=T[r][0];
-                       q=T[r][1];
-                       M[p][q]=car2; }
-                    break; } }
-            else break;
-        i++;
-        j++; }
-    i=k-1;
-    j=l-1;
-    while(i>-1 && j>-1){
-        if (M[i][j]==car1) {
-                t++;
-                T[t-1]=(i,j); }
-        else if (M[i][j]==car2){
-                if (t==0) break;
-                else {
-                    for(r=0;r<t;r++) {
-                       p=T[r][0];
-                       q=T[r][1];
-                       M[p][q]=car2;}
-                    break; } }
-            else break; 
-        i--;
-        j--;} 
-}
+do{
+      for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+          hori_possible(M,i,j,car1,car2);
+          verti_possible(M,i,j,car1,car2);
+          diag_possible(M,i,j,car1,car2);
+          anti_diag_possible(M,i,j,car1,car2);
+        }
+      }
+      if (possible_case==false) {
+        s++;
+        car3=car1;
+        car1=car2;
+        car2=car3;
+      }
+      else {
+        afficher_plat(M);
+        pawn=pawn_calculator(M);
+        break;}
+    }while(s==1);
+    if(s==2){
+        break;
+    }
