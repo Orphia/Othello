@@ -314,9 +314,9 @@ int plein(matrice M) {
 }
 
 void main() {
-  int iter=0,S=0;
+  int iter=0,s=0;
   int i,j,k,l;
-  char car1, car2;
+  char car1, car2,player='N';
   couple pawn;
   matrice M;
   for (i = 0; i < 8; i++) {
@@ -335,6 +335,7 @@ void main() {
   printf("\nLe nombre des pions Blancs est:\t 2\n");
   printf("Le nombre des pions noirs est:\t 2\n");
   do {
+    printf("%c , it's your turn!!",player);
     do {
       printf("\nChose a case:\n");
       scanf("%d",&k);
@@ -343,46 +344,54 @@ void main() {
          printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
       }
     } while(M[k][l]!='O');
-    if (iter%2==0)
+   if (iter%2==0) {
+      player='B';
       M[k][l]='N';
-    else
+      car1='B';
+      car2='N';
+     }
+    else {
       M[k][l]='B';
+      player='N';
+      car1='N';
+      car2='B';
+     }
     for (i = 0; i < 8; i++) {
       for (j = 0; j < 8; j++) {
         if (M[i][j]=='O')
           M[i][j]=' ';
       }
     }
-    if (iter%2!=0) { //la detection des cases possibles noires
-      car1='N';
-      car2='B';
-    }
-     else {
-      car1='B';
-      car2='N';
-    }
     hori_color_change(M,k,l,car1,car2);
     verti_color_change(M,k,l,car1,car2);
     diag_color_change(M,k,l,car1,car2);
     anti_diag_color_change(M,k,l,car1,car2);
-    for (i = 0; i < 8; i++) {
-      for (j = 0; j < 8; j++) {
-        hori_possible(M,i,j,car1,car2);
-        verti_possible(M,i,j,car1,car2);
-        diag_possible(M,i,j,car1,car2);
-        anti_diag_possible(M,i,j,car1,car2);
+    do{
+      for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+          hori_possible(M,i,j,car1,car2);
+          verti_possible(M,i,j,car1,car2);
+          diag_possible(M,i,j,car1,car2);
+          anti_diag_possible(M,i,j,car1,car2);
+        }
       }
-    }
-
-    afficher_plat(M);
-    pawn=pawn_calculator(M);
-    if(!possible_case) {
-      S++;
-      if(S==1){
+      afficher_plat(M);
+      pawn=pawn_calculator(M);
+      if (!possible_case) {
+        s++;
+        if (iter%2!=0) { //la detection des cases possibles noires
+          car1='N';
+          car2='B';
+        }
+        else {
+          car1='B';
+          car2='N';
+        } }
+    }while(s==1);
+    if(s==2){
         continue;
-      }
-      else break;
     }
+      else if(s==3) break;
     iter++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
