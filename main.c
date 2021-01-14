@@ -339,7 +339,7 @@ void play(matrice M, char player, char car1, char car2, int iter){
 }
 
 int main() {
-  int iter=0,s=0;
+  int iter=0,s;
   int i,j,k,l;
   char car1, car2, car3, player='N';
   couple pawn;
@@ -387,13 +387,16 @@ int main() {
         car3=car1;
         car1=car2;
         car2=car3;
+        printf("%c ,EH EH EH U GOT NO POSSIBLE CASE",player);
       }
       else {
         afficher_plat(M);
         pawn=pawn_calculator(M);
         break;}
     }
-    if(s==2) break;
+    if(s==2) {
+      printf("%c ,EH EH EH U GOT NO POSSIBLE CASE",player);
+      break;}
     iter++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
