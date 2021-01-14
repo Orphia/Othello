@@ -371,7 +371,8 @@ int main() {
         car2='B';
       }
       play(M,player,car1,car2,iter);
-    do{
+    s=0;
+    while(s<2) {
       for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
           hori_possible(M,i,j,car1,car2);
@@ -380,8 +381,9 @@ int main() {
           anti_diag_possible(M,i,j,car1,car2);
         }
       }
-      if (possible_case==false) {
+      if (!possible_case) {
         s++;
+        iter++;
         car3=car1;
         car1=car2;
         car2=car3;
@@ -390,10 +392,8 @@ int main() {
         afficher_plat(M);
         pawn=pawn_calculator(M);
         break;}
-    }while(s==1);
-    if(s==2){
-        break;
     }
+    if(s==2) break;
     iter++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
