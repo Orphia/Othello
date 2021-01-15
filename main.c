@@ -1,9 +1,12 @@
 //les fcts possibles
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #define true 1
 #define false 0
 typedef char matrice[8][8];
 typedef struct { int Wh; int Bl;} couple;
+typedef struct { char username[30]; int score;} playerID;
 
 void hori_possible(matrice M,int l, int k,char car1,char car2) {
   int i;
@@ -319,6 +322,19 @@ int main() {
   char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
+  playerID player1,player2;
+  printf("Welcome to the game!!Please enter your usernames!!\n");
+  scanf("%s",player1.username);
+  scanf("%s",player2.username);
+  FILE *data;
+  data = fopen("database.bin","ab");
+  if(data==NULL) {
+    printf("\nError!!\n");
+    exit(EXIT_FAILURE);
+  }
+  fwrite(player1.username,sizeof(char),strlen(player1.username)+1,data);
+  fwrite(player2.username,sizeof(char),strlen(player2.username)+1,data);
+  fclose(data);
   for (i = 0; i < 8; i++) {
     for (j = 0; j < 8; j++)
       M[i][j]=' ';
