@@ -373,30 +373,36 @@ int main() {
       play(M,player,car1,car2,iter);
     s=0;
     while(s<2) {
+      printf("\nplease work!!\n");
       for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
+          printf("your possible cases are:\n");
           hori_possible(M,i,j,car1,car2);
           verti_possible(M,i,j,car1,car2);
           diag_possible(M,i,j,car1,car2);
           anti_diag_possible(M,i,j,car1,car2);
         }
       }
+      printf("\nplease check these:\n");
       if (!possible_case) {
         s++;
         iter++;
         car3=car1;
         car1=car2;
         car2=car3;
-        printf("%c ,EH EH EH U GOT NO POSSIBLE CASE",player);
+        printf("%c ,EH EH EH U GOT NO POSSIBLE CASE\n",player);
       }
       else {
+        printf("ur new board is :\n");
         afficher_plat(M);
         pawn=pawn_calculator(M);
         break;}
     }
+    printf("kzjrhfzejhfEJHFIO 	HAE\n");
     if(s==2) {
-      printf("%c ,EH EH EH U GOT NO POSSIBLE CASE",player);
+      printf("%c ,EH EH EH U GOT NO POSSIBLE CASE\n",player);
       break;}
+    printf("weeeeeeeeeeeeeeeeee!\n");
     iter++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
