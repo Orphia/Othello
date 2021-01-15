@@ -313,34 +313,9 @@ int plein(matrice M) {
   return true;
 }
 
-void play(matrice M, char player, char car1, char car2, int iter){
-  int k,l,i,j;
-  printf("%c , it's your turn!!",player);
-    do {
-      printf("\nChose a case:\n");
-      scanf("%d",&k);
-      scanf("%d",&l);
-      if(M[k][l]!='O') {
-         printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
-      }
-    } while(M[k][l]!='O');
-    if (iter%2==0) M[k][l]='N';
-    else M[k][l]='B';
-    for (i = 0; i < 8; i++) {
-      for (j = 0; j < 8; j++) {
-        if (M[i][j]=='O')
-          M[i][j]=' ';
-      }
-    }
-    hori_color_change(M,k,l,car1,car2);
-    verti_color_change(M,k,l,car1,car2);
-    diag_color_change(M,k,l,car1,car2);
-    anti_diag_color_change(M,k,l,car1,car2);
-}
-
 int main() {
   int iter=0,s;
-  int i,j,k,l;
+  int i,j,k,l,code;
   char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
@@ -370,7 +345,32 @@ int main() {
         car1='N';
         car2='B';
       }
-      play(M,player,car1,car2,iter);
+      printf("%c , it's your turn!!",player);
+      if(iter>=1) {
+        printf("\ntap 1 to restart!! And any oher key to continue!!\n");
+        scanf("%d",&code);
+        if(code==1) return main(); 
+      }
+     do {
+      printf("\nChose a case:\n");
+      scanf("%d",&k);
+      scanf("%d",&l);
+      if(M[k][l]!='O') {
+         printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
+      }
+    } while(M[k][l]!='O');
+    if (iter%2==0) M[k][l]='N';
+    else M[k][l]='B';
+    for (i = 0; i < 8; i++) {
+      for (j = 0; j < 8; j++) {
+        if (M[i][j]=='O')
+          M[i][j]=' ';
+      }
+    }
+    hori_color_change(M,k,l,car1,car2);
+    verti_color_change(M,k,l,car1,car2);
+    diag_color_change(M,k,l,car1,car2);
+    anti_diag_color_change(M,k,l,car1,car2);
     s=0;
     while(s<2) {
       for (i = 0; i < 8; i++) {
