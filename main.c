@@ -317,7 +317,46 @@ int plein(matrice M) {
   return true;
 }
 
-FILE *stocker(FILE *old_file,playerID player) {
+void tapez_username(playerID player) {
+  FILE *data;
+  char name[30];
+  int exist,f, first_visit;
+  data = fopen("database.txt","r");
+  if(data==NULL) {
+    printf("\nError!!\n");
+    exit(EXIT_FAILURE);
+  }
+  scanf("%d",&first_visit);
+  printf("Please enter your username!!\n\n");
+  if(first_visit==true){
+    do {
+      exist=false;
+      scanf("%s",player.username);
+      while(!feof(data)) {
+        fscanf(data,"%s\t\n",name);
+        if(strcmp(name,player.username)==0) {
+            printf("exists already!! change it !!\n");
+            exist=true;
+            rewind(data);
+            break; }
+          }
+     }while(exist);
+  }
+  else{
+    scanf("%s",player.username);
+    while(!feof(data)) {
+      fscanf(data,"%s\t\n",name);
+      if(strcmp(name,player.username)==0) {
+            f=1;
+            break; }
+          }
+    if(f!=1)
+        printf("looks like this is your first time with us!!\n");
+    fclose(data);
+  }
+}
+
+void stocker(FILE *old_file,playerID player) {
   int S=false;
   int old_score,new_score;
   char nom[30];
@@ -339,7 +378,6 @@ FILE *stocker(FILE *old_file,playerID player) {
   fclose(new_file);
   remove("database.txt");
   rename("data.txt","database.txt");
-  return new_file;
 }
 
 int main() {
@@ -348,7 +386,12 @@ int main() {
   char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
-  FILE *old_file=NULL;
+  FILE *data;
+  playerID player1,player2;
+  printf("______________Welcome to the game!!_______________\n\n\nPLAYER 1 :Type 1 if this is your first visit and 0 otherwise :\n");
+  tapez_username(player1);
+  printf("______________Welcome to the game!!_______________\n\n\nPLAYER 2 :Type 1 if this is your first visit and 0 otherwise :\n");
+  tapez_username(player2);
   printf("PLAYER 1 the owner of the black pawns and PLAYER 2 the owner of the white ones.\n");
   printf("\nNow let the game begins!!\n");
   for (i = 0; i < 8; i++) {
@@ -431,6 +474,9 @@ int main() {
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
   else if(pawn.Wh<pawn.Bl) printf("Black is the winner!! Congrats!!\n White, Try next time!!");
   else printf("it's a draw!! you both are winners and losers!!");
-  old_file=stocker(old_file,)
+  player1.score=pawn.Bl;
+  player2.score=pawn.Wh;
+  stocker(data,player1);
+  stocker(data,player2);
   return 0;
 }
