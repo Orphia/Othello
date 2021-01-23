@@ -340,9 +340,26 @@ void stocker(playerID player) {
   printf("%d",rename("bdd.txt","BaseDeDonnees.txt"));
 }
 
+void print_moves(int k, int l, int iter){
+      int tab[64][2];
+      int i;
+      tab[iter][0]=k;
+      tab[iter][1]=l;
+      printf("\n until now the moves played were:\n");
+      for(i=0;i<iter+1;i++){
+        printf("(%d,%d)",tab[i][0],tab[i][1]);
+        if(i%2==0) printf("\t");
+        else printf("\n");
+   }
+}
+
+int savesave(){
+  
+}
+
 int main() {
   int iter=0,s;
-  int i,j,k,l,code;
+  int i,j,k,l,code,save;
   char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
@@ -381,9 +398,17 @@ int main() {
       }
       printf("%c , it's your turn!!",player);
       if(iter>=1) {
-        printf("\ntap 1 to restart!! And any oher key to continue!!\n");
+        printf("\ntap 9 to restart!! And any oher key to continue!!\n");
         scanf("%d",&code);
-        if(code==1) return main();
+        if(code==9) {
+          printf("tap 1 to save it!!\n");
+          scanf("%d",&save);
+          if(save==1){
+            printf("to finish the game later here is its keyword : part%d",part);
+            part++;
+          }
+          return main();
+        }
       }
      do {
       printf("\nChose a case:\n");
@@ -393,6 +418,8 @@ int main() {
          printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
       }
     } while(M[k][l]!='O');
+    print_moves(k,l,iter);
+    printf("\n");
     if (iter%2==0) M[k][l]='N';
     else M[k][l]='B';
     for (i = 0; i < 8; i++) {
@@ -425,6 +452,7 @@ int main() {
       else {
         afficher_plat(M);
         pawn=pawn_calculator(M);
+        printf("  ___________________________________________________________________\n");
         break;}
     }
     if(s==2) break;
