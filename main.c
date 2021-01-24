@@ -340,11 +340,8 @@ void stocker(playerID player) {
   printf("%d",rename("bdd.txt","BaseDeDonnees.txt"));
 }
 
-void print_moves(int k, int l, int iter){
-      int tab[64][2];
+void print_moves(int tab[64][2], int iter){
       int i;
-      tab[iter][0]=k;
-      tab[iter][1]=l;
       printf("\n until now the moves played were:\n");
       for(i=0;i<iter+1;i++){
         printf("(%d,%d)",tab[i][0],tab[i][1]);
@@ -359,6 +356,7 @@ int savesave(){
 
 int main() {
   int iter=0,s;
+  int tab[64][2];
   int i,j,k,l,code,save;
   char car1, car2, car3, player='N';
   couple pawn;
@@ -401,12 +399,12 @@ int main() {
         printf("\ntap 9 to restart!! And any oher key to continue!!\n");
         scanf("%d",&code);
         if(code==9) {
-          printf("tap 1 to save it!!\n");
+         /* printf("tap 1 to save it!!\n");
           scanf("%d",&save);
           if(save==1){
             printf("to finish the game later here is its keyword : part%d",part);
             part++;
-          }
+          }*/
           return main();
         }
       }
@@ -418,7 +416,9 @@ int main() {
          printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
       }
     } while(M[k][l]!='O');
-    print_moves(k,l,iter);
+    tab[iter][0]=k;
+    tab[iter][1]=l;
+    print_moves(tab,iter);
     printf("\n");
     if (iter%2==0) M[k][l]='N';
     else M[k][l]='B';
@@ -432,6 +432,9 @@ int main() {
     verti_color_change(M,k,l,car1,car2);
     diag_color_change(M,k,l,car1,car2);
     anti_diag_color_change(M,k,l,car1,car2);
+    afficher_plat(M);
+    pawn=pawn_calculator(M);
+    printf("  ___________________________________________________________________\n");
     s=0;
     while(s<2) {
       for (i = 0; i < 8; i++) {
@@ -442,7 +445,7 @@ int main() {
           anti_diag_possible(M,i,j,car1,car2);
         }
       }
-      if (!possible_case) {
+      if (!possible_case(M)) {
         s++;
         iter++;
         car3=car1;
@@ -451,8 +454,6 @@ int main() {
       }
       else {
         afficher_plat(M);
-        pawn=pawn_calculator(M);
-        printf("  ___________________________________________________________________\n");
         break;}
     }
     if(s==2) break;

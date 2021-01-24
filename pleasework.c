@@ -12,6 +12,7 @@ void print_moves(int k, int l, int iter){
         if(iter%2==0) printf("\t");
         else printf("\n");
       }
-}
 
-how to 
+iter %2==0{
+   we change to black and look for white
+}
