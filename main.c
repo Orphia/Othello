@@ -10,24 +10,24 @@ typedef struct { char username[30]; int score;} playerID;
 
 void hori_possible(matrice M,int l, int k,char car1,char car2) {
   int i;
-  if (M[l][k]==car1) {
-      if (M[l][k+1]== car2) {
+  if (M[l][k]==car2) {
+      if (M[l][k+1]== car1) {
         for(i=k+2;i<8;i++) {
           if (M[l][i]==' ' || M[l][i]=='O') {
              M[l][i]='O';
              break;
            }
-          if (M[l][i]==car1)
+          if (M[l][i]==car2)
              break;
           }
        }
-      if (M[l][k-1]==car2) {
+      if (M[l][k-1]==car1) {
         for(i=k-2;i>-1;i--) {
           if (M[l][i]==' ' || M[l][i]=='O') {
              M[l][i]='O';
              break;
            }
-          if (M[l][i]== car1)
+          if (M[l][i]== car2)
              break;
         }
       }
@@ -35,24 +35,24 @@ void hori_possible(matrice M,int l, int k,char car1,char car2) {
 }
 void verti_possible(matrice M,int l, int k,char car1,char car2) {
   int i;
-  if (M[l][k]==car1) {
-      if (M[l+1][k]==car2) {
+  if (M[l][k]==car2) {
+      if (M[l+1][k]==car1) {
         for(i=l+2;i<8;i++) {
           if (M[i][k]==' ' || M[i][k]=='O') {
              M[i][k]='O';
              break;
            }
-          if (M[i][k]==car1)
+          if (M[i][k]==car2)
              break;
           }
       }
-      if (M[l-1][k]==car2) {
+      if (M[l-1][k]==car1) {
         for(i=l-2;i>-1;i--) {
           if (M[i][k]==' ' || M[i][k]=='O') {
              M[i][k]='O';
              break;
            }
-          if (M[i][k]== car1)
+          if (M[i][k]== car2)
              break;
        }
     }
@@ -60,8 +60,8 @@ void verti_possible(matrice M,int l, int k,char car1,char car2) {
 }
 void diag_possible(matrice M, int l, int k,char car1,char car2) {
   int i,j;
-  if (M[l][k]==car1) {
-      if (M[l+1][k+1]==car2){
+  if (M[l][k]==car2) {
+      if (M[l+1][k+1]==car1){
         i=l+2;
         j=k+2;
         while (i<8 && j<8) {
@@ -69,14 +69,14 @@ void diag_possible(matrice M, int l, int k,char car1,char car2) {
             M[i][j]='O';
             break;
           }
-          if (M[i][j]==car1) {
+          if (M[i][j]==car2) {
             break;
           }
           i++;
           j++;
         }
       }
-      if (M[l-1][k-1]==car2) {
+      if (M[l-1][k-1]==car1) {
         i=l-2;
         j=k-2;
         while (i>-1 && j>-1) {
@@ -84,7 +84,7 @@ void diag_possible(matrice M, int l, int k,char car1,char car2) {
             M[i][j]='O';
             break;
           }
-          if (M[i][j]==car1) {
+          if (M[i][j]==car2) {
             break;
           }
           i--;
@@ -95,8 +95,8 @@ void diag_possible(matrice M, int l, int k,char car1,char car2) {
 }
 void anti_diag_possible(matrice M, int l, int k,char car1,char car2) {
   int i, j;
-  if (M[l][k]==car1) {
-      if (M[l-1][k+1]==car2){
+  if (M[l][k]==car2) {
+      if (M[l-1][k+1]==car1){
         i=l-2;
         j=k+2;
         while (i>-1 && j<8) {
@@ -104,13 +104,13 @@ void anti_diag_possible(matrice M, int l, int k,char car1,char car2) {
             M[i][j]='O';
             break;
           }
-          if (M[i][j]==car1) {
+          if (M[i][j]==car2) {
             break; }
         i--;
         j++;
         }
       }
-     if (M[l+1][k-1]==car2) {
+     if (M[l+1][k-1]==car1) {
         i=l+2;
         j=k-2;
         while (i<8 && j>-1) {
@@ -118,7 +118,7 @@ void anti_diag_possible(matrice M, int l, int k,char car1,char car2) {
             M[i][j]='O';
             break;
           }
-          if (M[i][j]==car1) {
+          if (M[i][j]==car2) {
             break;
           }
           i++;
@@ -350,21 +350,17 @@ void print_moves(int tab[64][2], int iter){
    }
 }
 
-int savesave(){
-  
-}
-
-int main() {
-  int iter=0,s;
+void play() {
+  int iter=0;
   int tab[64][2];
-  int i,j,k,l,code,save;
-  char car1, car2, car3, player='N';
+  int i,j,k,l,code,save,S=0;
+  char car1, car2, car3, player='N',partID[30];
   couple pawn;
   matrice M;
   playerID player1,player2;
-  printf("______________Welcome to the game!!_______________\nPLAYER 1: tapez votre nom\n");
+  printf("\nPLAYER 1: tapez votre nom\n");
   scanf("%s",player1.username);
-  printf("______________Welcome to the game!!_______________\nPLAYER 2: tapez votre nom\n");
+  printf("\nPLAYER 2: tapez votre nom\n");
   scanf("%s",player2.username);
   printf("PLAYER 1 the owner of the black pawns and PLAYER 2 the owner of the white ones.\n");
   printf("\nNow let the game begins!!\n");
@@ -376,15 +372,12 @@ int main() {
   M[4][4]='B';
   M[3][4]='N';
   M[4][3]='N';
-  M[3][2]='O';
-  M[4][5]='O';
-  M[2][3]='O';
-  M[5][4]='O';
-  afficher_plat(M);
-  printf("\nLe nombre des pions Blancs est:\t 2\n");
-  printf("Le nombre des pions noirs est:\t 2\n");
   do {
-       if (iter%2==0) {
+     if(S==2) {
+       afficher_plat(M);
+       pawn_calculator(M);
+       break; }
+     if (iter%2==0) {
         player='N';
         car1='B';
         car2='N';
@@ -394,18 +387,33 @@ int main() {
         car1='N';
         car2='B';
       }
+      for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+          hori_possible(M,i,j,car1,car2);
+          verti_possible(M,i,j,car1,car2);
+          diag_possible(M,i,j,car1,car2);
+          anti_diag_possible(M,i,j,car1,car2);
+        }
+      }
+      if(!possible_case(M)) {
+        S++;
+        continue;
+      }
+      afficher_plat(M);
+      pawn=pawn_calculator(M);
+      printf("_______________________________________________________________________\n");
       printf("%c , it's your turn!!",player);
       if(iter>=1) {
         printf("\ntap 9 to restart!! And any oher key to continue!!\n");
         scanf("%d",&code);
         if(code==9) {
-         /* printf("tap 1 to save it!!\n");
+          printf("tap 1 to save it!!\n");
           scanf("%d",&save);
           if(save==1){
-            printf("to finish the game later here is its keyword : part%d",part);
-            part++;
-          }*/
-          return main();
+            printf("to finish the game later, name it");
+            scanf("%s",partID);
+          }
+          return play();
         }
       }
      do {
@@ -432,31 +440,6 @@ int main() {
     verti_color_change(M,k,l,car1,car2);
     diag_color_change(M,k,l,car1,car2);
     anti_diag_color_change(M,k,l,car1,car2);
-    afficher_plat(M);
-    pawn=pawn_calculator(M);
-    printf("  ___________________________________________________________________\n");
-    s=0;
-    while(s<2) {
-      for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-          hori_possible(M,i,j,car1,car2);
-          verti_possible(M,i,j,car1,car2);
-          diag_possible(M,i,j,car1,car2);
-          anti_diag_possible(M,i,j,car1,car2);
-        }
-      }
-      if (!possible_case(M)) {
-        s++;
-        iter++;
-        car3=car1;
-        car1=car2;
-        car2=car3;
-      }
-      else {
-        afficher_plat(M);
-        break;}
-    }
-    if(s==2) break;
     iter++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
@@ -466,5 +449,15 @@ int main() {
   player2.score=pawn.Wh;
   stocker(player1);
   stocker(player2);
-  return 0;
+}
+
+void main(){
+  int choice;
+  printf("_________________Welcome to the game!!__________________\n");
+  printf("__________________________Menu__________________________\n");
+  printf("1.Play\n2.Load an existing game\nMake your choice");
+  scanf("%d",&choice);
+  switch(choice){
+    case 1: play();
+  }
 }
