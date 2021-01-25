@@ -350,11 +350,35 @@ void print_moves(int tab[64][2], int iter){
    }
 }
 
-void play() {
+void upload(int tab[64][2],int iter) {
+  int exist,i;
+  char partID[30],name[30];
+  FILE *fich=fopen("gamepart.txt","a+");
+  printf("to finish the game later, name it:\n");
+  do {
+      exist=false;
+      scanf("%s",partID);
+      while(!feof(fich)) {
+        fscanf(fich,"%s\n",name);
+        if(strcmp(name,partID)==0) {
+            printf("exists already!! change it !!\n");
+            exist=true;
+            rewind(fich);
+            break; }
+          }
+     }while(exist);
+    fprintf(fich,"%s ",partID);
+    for(i=0;i<iter;i++)                 // hna madernash iter + 1 f7al printmoves 7it mazal ma3merna l case dial iter
+      fprintf(fich,"%d%d",tab[i][0],tab[i][1]);
+    fprintf(fich,"\n");
+    fclose(fich);
+  }
+
+void play(int load) {
   int iter=0;
   int tab[64][2];
   int i,j,k,l,code,save,S=0;
-  char car1, car2, car3, player='N',partID[30];
+  char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
   playerID player1,player2;
@@ -409,21 +433,23 @@ void play() {
         if(code==9) {
           printf("tap 1 to save it!!\n");
           scanf("%d",&save);
-          if(save==1){
-            printf("to finish the game later, name it");
-            scanf("%s",partID);
-          }
+          if(save==1)
+            upload(tab,iter);
           return play();
         }
       }
-     do {
-      printf("\nChose a case:\n");
-      scanf("%d",&k);
-      scanf("%d",&l);
-      if(M[k][l]!='O') {
-         printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
-      }
-    } while(M[k][l]!='O');
+     if (load==false) {
+       do {
+        printf("\nChose a case:\n");
+        scanf("%d",&k);
+        scanf("%d",&l);
+        if(M[k][l]!='O') {
+           printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
+        }
+      } while(M[k][l]!='O');
+     } else {
+       
+     }
     tab[iter][0]=k;
     tab[iter][1]=l;
     print_moves(tab,iter);
@@ -452,12 +478,27 @@ void play() {
 }
 
 void main(){
-  int choice;
-  printf("_________________Welcome to the game!!__________________\n");
-  printf("__________________________Menu__________________________\n");
-  printf("1.Play\n2.Load an existing game\nMake your choice");
-  scanf("%d",&choice);
-  switch(choice){
-    case 1: play();
-  }
+  char car;
+  int choice,load;
+  do {
+    printf("_________________Welcome to the game!!__________________\n");
+    printf("__________________________Menu__________________________\n");
+    printf("1.Play\n2.Load an existing game\n3.Exit\nMake your choice:\n");
+    scanf("%d",&choice);
+    switch(choice){
+      case 1: { load=false;
+          play();
+          break; }
+      case 2:{ load=true;
+           play();
+           break;
+         }
+      case 3: {
+        printf("Type ESC to exit.\n");
+        scanf("%c",&car);
+        break;
+      }
+      default: printf("looks like you made a wrong choice my friend!!\n");
+     }
+  }while(car==27);
 }
