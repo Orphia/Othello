@@ -384,9 +384,16 @@ int reload(int cur){
     printf("tap the name of the disered part!!\n");
     scanf("%s",partID);
     while(!feof(fic)) {
+      fscanf(fic,"%s \n",name);
       if(strcmp(name,partID)==0){
+        if(cur==0){
           cur=ftell(fic);
           break;
+        } 
+        else {
+          fseek(fic,cur,SEEK_CUR);
+          cur=ftell(fic);
+        }
       }
     }
     fclose(fic);
@@ -467,7 +474,8 @@ void play(int load) {
         }
       } while(M[k][l]!='O');
      } else {
-       
+        k=reload(cur);
+        l=reload(cur+1);
      }
     tab[iter][0]=k;
     tab[iter][1]=l;
@@ -486,6 +494,7 @@ void play(int load) {
     diag_color_change(M,k,l,car1,car2);
     anti_diag_color_change(M,k,l,car1,car2);
     iter++;
+    cur++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
   else if(pawn.Wh<pawn.Bl) printf("Black is the winner!! Congrats!!\n White, Try next time!!");
