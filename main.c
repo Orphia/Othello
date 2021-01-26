@@ -374,15 +374,13 @@ void upload(int tab[64][2],int iter) {
     fclose(fich);
 }
 
-int reload(int cur){
-    char name[30],partID[30];
+int reload(int cur,char partID[30]){
+    char name[30];
     FILE *fic=fopen("gamepart.txt","r+");
     if(fic==NULL) {
       printf("\nError!!\n");
       exit(EXIT_FAILURE);
     }
-    printf("tap the name of the disered part!!\n");
-    scanf("%s",partID);
     while(!feof(fic)) {
       fscanf(fic,"%s \n",name);
       if(strcmp(name,partID)==0){
@@ -395,12 +393,12 @@ int reload(int cur){
           cur=ftell(fic);
         }
       }
-    }
+    }  //something to alert that it reached the end of line
     fclose(fic);
     return cur;
 }
 
-void play(int load) {
+void play(int load,char partID[30]) {
   int iter=0;
   int tab[64][2];
   int i,j,k,l,code,save,S=0,cur=0;
@@ -452,31 +450,31 @@ void play(int load) {
       afficher_plat(M);
       pawn=pawn_calculator(M);
       printf("_______________________________________________________________________\n");
-      printf("%c , it's your turn!!",player);
-      if(iter>=1) {
-        printf("\ntap 9 to restart!! And any oher key to continue!!\n");
-        scanf("%d",&code);
-        if(code==9) {
-          printf("tap 1 to save it!!\n");
-          scanf("%d",&save);
-          if(save==1)
-            upload(tab,iter);
-          return play(load);
+      if (load==false){
+        printf("%c , it's your turn!!",player);
+        if(iter>=1) {
+          printf("\ntap 9 to restart!! And any oher key to continue!!\n");
+          scanf("%d",&code);
+          if(code==9) {
+            printf("tap 1 to save it!!\n");
+            scanf("%d",&save);
+            if(save==1)
+              upload(tab,iter);
+            return play(load,partID);
+          }
         }
-      }
-     if (load==false) {
-       do {
-        printf("\nChose a case:\n");
-        scanf("%d",&k);
-        scanf("%d",&l);
-        if(M[k][l]!='O') {
-           printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
-        }
-      } while(M[k][l]!='O');
-     } else {
-        k=reload(cur);
-        l=reload(cur+1);
-     }
+        do {
+          printf("\nChose a case:\n");
+          scanf("%d",&k);
+          scanf("%d",&l);
+          if(M[k][l]!='O') {
+            printf(" ASH KATRWEN! MABANT LEK GHA HADIK !!!!!!!!!!!!!!!!!! \n");
+          }
+        } while(M[k][l]!='O');
+      } else {
+          k=reload(cur,partID);
+          l=reload(cur+1,partID); //increm idk how to do it
+       }
     tab[iter][0]=k;
     tab[iter][1]=l;
     print_moves(tab,iter);
@@ -494,7 +492,6 @@ void play(int load) {
     diag_color_change(M,k,l,car1,car2);
     anti_diag_color_change(M,k,l,car1,car2);
     iter++;
-    cur++;
   } while(!plein(M));
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
   else if(pawn.Wh<pawn.Bl) printf("Black is the winner!! Congrats!!\n White, Try next time!!");
@@ -508,6 +505,7 @@ void play(int load) {
 void main(){
   char car;
   int choice,load;
+  char partID[30];
   do {
     printf("_________________Welcome to the game!!__________________\n");
     printf("__________________________Menu__________________________\n");
@@ -515,10 +513,12 @@ void main(){
     scanf("%d",&choice);
     switch(choice){
       case 1: { load=false;
-          play(load);
+          play(load,partID);
           break; }
       case 2:{ load=true;
-           play(load);
+           printf("tap the name of the disered part!!\n");
+           scanf("%s",partID);
+           play(load,partID);
            break;
          }
       case 3: {
