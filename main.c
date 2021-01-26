@@ -372,12 +372,31 @@ void upload(int tab[64][2],int iter) {
       fprintf(fich,"%d%d",tab[i][0],tab[i][1]);
     fprintf(fich,"\n");
     fclose(fich);
-  }
+}
+
+int reload(int cur){
+    char name[30],partID[30];
+    FILE *fic=fopen("gamepart.txt","r+");
+    if(fic==NULL) {
+      printf("\nError!!\n");
+      exit(EXIT_FAILURE);
+    }
+    printf("tap the name of the disered part!!\n");
+    scanf("%s",partID);
+    while(!feof(fic)) {
+      if(strcmp(name,partID)==0){
+          cur=ftell(fic);
+          break;
+      }
+    }
+    fclose(fic);
+    return cur;
+}
 
 void play(int load) {
   int iter=0;
   int tab[64][2];
-  int i,j,k,l,code,save,S=0;
+  int i,j,k,l,code,save,S=0,cur=0;
   char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
@@ -435,7 +454,7 @@ void play(int load) {
           scanf("%d",&save);
           if(save==1)
             upload(tab,iter);
-          return play();
+          return play(load);
         }
       }
      if (load==false) {
@@ -487,10 +506,10 @@ void main(){
     scanf("%d",&choice);
     switch(choice){
       case 1: { load=false;
-          play();
+          play(load);
           break; }
       case 2:{ load=true;
-           play();
+           play(load);
            break;
          }
       case 3: {
