@@ -7,6 +7,11 @@
 typedef char matrice[8][8];
 typedef struct { int Wh; int Bl;} couple;
 typedef struct { char username[30]; int score;} playerID;
+typedef struct {int x ; int y ; int cur; } cordonnee;
+typedef struct _joueur{ playerID *info; struct _joueur *next;} joueur;
+typedef joueur *joueurliste;
+
+void main();
 
 void hori_possible(matrice M,int l, int k,char car1,char car2) {
   int i;
@@ -354,7 +359,7 @@ void upload(int tab[64][2],int iter) {
   int exist,i;
   char partID[30],name[30];
   FILE *fich=fopen("gamepart.txt","a+");
-  printf("to finish the game later, name it:\n");
+  printf("to store the game, name it:\n");
   do {
       exist=false;
       scanf("%s",partID);
@@ -369,12 +374,13 @@ void upload(int tab[64][2],int iter) {
      }while(exist);
     fprintf(fich,"%s ",partID);
     for(i=0;i<iter;i++)                 // hna madernash iter + 1 f7al printmoves 7it mazal ma3merna l case dial iter
-      fprintf(fich,"%d%d",tab[i][0],tab[i][1]);
+      fprintf(fich,"%d %d ",tab[i][0],tab[i][1]);
+    fprintf(fich,"9 9");
     fprintf(fich,"\n");
     fclose(fich);
 }
 
-int reload(int cur,char partID[30]){
+cordonnee reload(cordonnee cord, char partID[30]){
     char name[30];
     FILE *fic=fopen("gamepart.txt","r+");
     if(fic==NULL) {
@@ -384,32 +390,64 @@ int reload(int cur,char partID[30]){
     while(!feof(fic)) {
       fscanf(fic,"%s \n",name);
       if(strcmp(name,partID)==0){
-        if(cur==0){
-          cur=ftell(fic);
-          break;
-        } 
-        else {
-          fseek(fic,cur,SEEK_CUR);
-          cur=ftell(fic);
+        if(cord.cur==0){
+          fscanf(fic,"%d %d ",&cord.x,&cord.y);
+          cord.cur=ftell(fic);
         }
+        else {
+          fseek(fic,cord.cur,SEEK_SET);
+          fscanf(fic,"%d %d ",&cord.x,&cord.y);
+          cord.cur=ftell(fic);
+        }
+        break;
       }
-    }  //something to alert that it reached the end of line
+    }
     fclose(fic);
-    return cur;
+    return cord;
 }
 
-void play(int load,char partID[30]) {
+joueurliste inorder_insert(joueurliste liste,joueur *newplayer){
+  joueurliste following=liste;
+  while((following->next!=NULL) && (following->next->info->score<newplayer->info->score))
+    following=following->next;
+  newplayer->next=following->next;
+  following->next=newplayer;
+  return following;
+}
+
+void topten(){
+  joueurliste liste=NULL;
+  playerID player;
+  int i=0;
+  FILE *data=fopen("BaseDeDonnees.txt","r+");
+  while(!feof(data)){
+   fscanf(data,"%s\t%d\n",player.username,&player.score);
+   joueur *newplayer=(joueur *)malloc(sizeof(joueur));
+   strcpy(newplayer->info->username,player.username);
+   newplayer->info->score=player.score;
+   printf("%s\t%d\n",newplayer->info->username,&newplayer->info->score);
+   newplayer->next=NULL;
+   liste=inorder_insert(liste,newplayer);
+ }
+ fclose(data);
+ printf("the TOP 10 scores are : \n");
+ while(i<10 && liste!=NULL){
+   printf("%s\t%d\n",liste->info->username,liste->info->score);
+   liste=liste->next;
+   i++;
+  }
+  if(i!=10) printf("Not Enough Players!!\n");
+}
+
+void play(playerID player1, playerID player2, int load,char partID[30],int up) {
   int iter=0;
   int tab[64][2];
-  int i,j,k,l,code,save,S=0,cur=0;
+  int i,j,k,l,code,save,S=0,R=true;
   char car1, car2, car3, player='N';
   couple pawn;
   matrice M;
-  playerID player1,player2;
-  printf("\nPLAYER 1: tapez votre nom\n");
-  scanf("%s",player1.username);
-  printf("\nPLAYER 2: tapez votre nom\n");
-  scanf("%s",player2.username);
+  cordonnee cord;
+  cord.cur=0;
   printf("PLAYER 1 the owner of the black pawns and PLAYER 2 the owner of the white ones.\n");
   printf("\nNow let the game begins!!\n");
   for (i = 0; i < 8; i++) {
@@ -447,20 +485,24 @@ void play(int load,char partID[30]) {
         S++;
         continue;
       }
-      afficher_plat(M);
-      pawn=pawn_calculator(M);
-      printf("_______________________________________________________________________\n");
+      if(R==true) {
+        printf("_______________________________________________________________________\n");
+        printf("%c , it's your turn!!\n",player);
+        afficher_plat(M);
+        pawn=pawn_calculator(M);
+      }
       if (load==false){
-        printf("%c , it's your turn!!",player);
+        R=true;
+        up=true;
         if(iter>=1) {
-          printf("\ntap 9 to restart!! And any oher key to continue!!\n");
+          printf("\ntap 9 to restart!! And any other number to continue!!\n");
           scanf("%d",&code);
           if(code==9) {
             printf("tap 1 to save it!!\n");
             scanf("%d",&save);
             if(save==1)
               upload(tab,iter);
-            return play(load,partID);
+            return main();
           }
         }
         do {
@@ -472,8 +514,21 @@ void play(int load,char partID[30]) {
           }
         } while(M[k][l]!='O');
       } else {
-          k=reload(cur,partID);
-          l=reload(cur+1,partID); //increm idk how to do it
+           if (reload(cord,partID).x != 9 && reload(cord,partID).y != 9) {
+              k=reload(cord,partID).x;
+              l=reload(cord,partID).y;
+              cord.cur=reload(cord,partID).cur;
+           } else {
+              load=false;
+              R=false;
+              for (i = 0; i < 8; i++) {
+                for (j = 0; j < 8; j++) {
+                  if (M[i][j]=='O')
+                    M[i][j]=' ';
+                }
+              }
+              continue;
+           }
        }
     tab[iter][0]=k;
     tab[iter][1]=l;
@@ -493,6 +548,7 @@ void play(int load,char partID[30]) {
     anti_diag_color_change(M,k,l,car1,car2);
     iter++;
   } while(!plein(M));
+  if(up==true) upload(tab,iter);
   if(pawn.Bl<pawn.Wh) printf("White is the winner!! Congrats!!\n Black, Try next time!!");
   else if(pawn.Wh<pawn.Bl) printf("Black is the winner!! Congrats!!\n White, Try next time!!");
   else printf("it's a draw!! you both are winners and losers!!");
@@ -500,33 +556,37 @@ void play(int load,char partID[30]) {
   player2.score=pawn.Wh;
   stocker(player1);
   stocker(player2);
+  topten();
 }
 
 void main(){
-  char car;
-  int choice,load;
+  playerID player1,player2;
+  int choice,load,exit=false, up=false;
   char partID[30];
+  printf("_________________Welcome to the game!!__________________\n");
+  printf("\nPLAYER 1: tapez votre nom\n");
+  scanf("%s",player1.username);
+  printf("\nPLAYER 2: tapez votre nom\n");
+  scanf("%s",player2.username);
   do {
-    printf("_________________Welcome to the game!!__________________\n");
     printf("__________________________Menu__________________________\n");
     printf("1.Play\n2.Load an existing game\n3.Exit\nMake your choice:\n");
     scanf("%d",&choice);
     switch(choice){
       case 1: { load=false;
-          play(load,partID);
+                up=true;
+          play(player1, player2, load,partID,up);
           break; }
       case 2:{ load=true;
-           printf("tap the name of the disered part!!\n");
+               up=false;
+           printf("tap the name of the desired part!!\n");
            scanf("%s",partID);
-           play(load,partID);
+           play(player1, player2, load,partID,up);
            break;
          }
-      case 3: {
-        printf("Type ESC to exit.\n");
-        scanf("%c",&car);
-        break;
-      }
-      default: printf("looks like you made a wrong choice my friend!!\n");
+      case 3: { exit=true;
+        break; }
+      default: { printf("looks like you made a wrong choice my friend!!\n"); }
      }
-  }while(car==27);
+  }while(exit==false);
 }
