@@ -8,11 +8,15 @@ typedef char matrice[8][8];
 typedef struct { int Wh; int Bl;} couple;
 typedef struct { char username[30]; int score;} playerID;
 typedef struct {int x ; int y ; int cur; } cordonnee;
+<<<<<<< HEAD
 typedef struct _joueur{ playerID *info; struct _joueur *next;} joueur;
 typedef joueur *joueurliste;
 
 void main();
+=======
+>>>>>>> 2dbe443d99264215eeb038d26c93fa4784f7aff4
 
+void main();
 void hori_possible(matrice M,int l, int k,char car1,char car2) {
   int i;
   if (M[l][k]==car2) {
@@ -359,7 +363,11 @@ void upload(int tab[64][2],int iter) {
   int exist,i;
   char partID[30],name[30];
   FILE *fich=fopen("gamepart.txt","a+");
+<<<<<<< HEAD
   printf("to store the game, name it:\n");
+=======
+  printf("to finish the game later, name it:\n");
+>>>>>>> 2dbe443d99264215eeb038d26c93fa4784f7aff4
   do {
       exist=false;
       scanf("%s",partID);
@@ -406,6 +414,7 @@ cordonnee reload(cordonnee cord, char partID[30]){
     return cord;
 }
 
+<<<<<<< HEAD
 joueurliste inorder_insert(joueurliste liste,joueur *newplayer){
   joueurliste following=liste;
   while((following->next!=NULL) && (following->next->info->score<newplayer->info->score))
@@ -440,6 +449,9 @@ void topten(){
 }
 
 void play(playerID player1, playerID player2, int load,char partID[30],int up) {
+=======
+void play(playerID player1, playerID player2, int load,char partID[30]) {
+>>>>>>> 2dbe443d99264215eeb038d26c93fa4784f7aff4
   int iter=0;
   int tab[64][2];
   int i,j,k,l,code,save,S=0,R=true;
@@ -493,9 +505,14 @@ void play(playerID player1, playerID player2, int load,char partID[30],int up) {
       }
       if (load==false){
         R=true;
+<<<<<<< HEAD
         up=true;
         if(iter>=1) {
           printf("\ntap 9 to restart!! And any other number to continue!!\n");
+=======
+        if(iter>=1) {
+          printf("\ntap 9 to restart!! And any oher key to continue!!\n");
+>>>>>>> 2dbe443d99264215eeb038d26c93fa4784f7aff4
           scanf("%d",&code);
           if(code==9) {
             printf("tap 1 to save it!!\n");
@@ -561,7 +578,11 @@ void play(playerID player1, playerID player2, int load,char partID[30],int up) {
 
 void main(){
   playerID player1,player2;
+<<<<<<< HEAD
   int choice,load,exit=false, up=false;
+=======
+  int choice,load,exit=false;
+>>>>>>> 2dbe443d99264215eeb038d26c93fa4784f7aff4
   char partID[30];
   printf("_________________Welcome to the game!!__________________\n");
   printf("\nPLAYER 1: tapez votre nom\n");
@@ -574,6 +595,7 @@ void main(){
     scanf("%d",&choice);
     switch(choice){
       case 1: { load=false;
+<<<<<<< HEAD
                 up=true;
           play(player1, player2, load,partID,up);
           break; }
@@ -582,6 +604,14 @@ void main(){
            printf("tap the name of the desired part!!\n");
            scanf("%s",partID);
            play(player1, player2, load,partID,up);
+=======
+          play(player1, player2, load,partID);
+          break; }
+      case 2:{ load=true;
+           printf("tap the name of the desired part!!\n");
+           scanf("%s",partID);
+           play(player1, player2, load,partID);
+>>>>>>> 2dbe443d99264215eeb038d26c93fa4784f7aff4
            break;
          }
       case 3: { exit=true;
