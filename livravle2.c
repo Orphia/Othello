@@ -93,7 +93,7 @@ void play_human(playerID player1, playerID player2, int load,char partID[30],int
   do {
      if(S==2) {
        afficher_plat(M);
-       pawn_calculator(M);
+       pawn=pawn_calculator(M);
        break; }
      if (iter%2==0) {
         player='N';
